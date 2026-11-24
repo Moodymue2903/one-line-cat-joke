@@ -7,6 +7,7 @@ Running this program writes the joke, exactly one line, to
 """
 
 from pathlib import Path
+import argparse
 
 JOKE = "My cat knocked my coffee off the table, looked me dead in the eye, and I apologised to her."
 
@@ -54,7 +55,16 @@ def verify(path=OUTPUT_PATH):
 
 
 def main():
-    path = write_entry()
+    """Write the joke to the entry file.
+
+    The output path defaults to /output/entry.txt; --output lets a
+    local test run write somewhere else without touching the entry.
+    """
+    parser = argparse.ArgumentParser(description="Write the one-line cat joke entry.")
+    parser.add_argument("--output", type=Path, default=OUTPUT_PATH,
+                        help="where to write the entry (default: /output/entry.txt)")
+    args = parser.parse_args()
+    path = write_entry(args.output)
     chars = verify(path)
     print(f"Wrote {chars} characters to {path}")
 
